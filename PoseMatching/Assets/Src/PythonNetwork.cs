@@ -7,11 +7,14 @@ using UnityEngine;
 
 public class LandmarkData
 {
+    public bool ok { get; set; }
     public float[,] landmarks { get; set; }
 }
 
 public class PythonNetwork : SingletonMonoBehaviour<PythonNetwork>
 {
+    public BlazeController blazeCon;
+
     static UdpClient udp;
     Thread receiveThread;
 
@@ -45,6 +48,9 @@ public class PythonNetwork : SingletonMonoBehaviour<PythonNetwork>
     {
         string text = Encoding.UTF8.GetString(data);
         LandmarkData landmarkData = JsonConvert.DeserializeObject<LandmarkData>(text);
-        Debug.Log(landmarkData.landmarks[0,0]);
+        if (landmarkData.ok)
+        {
+            blazeCon.landmarkData = landmarkData;
+        }
     }
 }
